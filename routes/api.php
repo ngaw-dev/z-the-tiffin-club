@@ -4,12 +4,42 @@ use App\Http\Controllers\Api\V1\Admin\ExtraController;
 use App\Http\Controllers\Api\V1\Admin\MealController;
 use App\Http\Controllers\Api\V1\Admin\OrderController;
 use App\Http\Controllers\Api\V1\Admin\SettingController;
+use App\Http\Controllers\Api\V1\Public\AccountOrderController;
+use App\Http\Controllers\Api\V1\Public\AuthController;
+use App\Http\Controllers\Api\V1\Public\MenuController;
+use App\Http\Controllers\Api\V1\Public\OrderController as PublicOrderController;
+use App\Http\Controllers\Api\V1\Public\OrderLookupController;
 use Illuminate\Support\Facades\Route;
 
-// ==== PUBLIC (STOREFRONT) ROUTES — owned by the Phase 3 storefront worker. Do not edit below. ====
-// ==== END PUBLIC ROUTES ====
+// ===========================================================================
+// Public (storefront) API — Phase 3. Append-only; keep all public routes in
+// this delimited group. Admin routes must NOT be added here.
+// ===========================================================================
 
-// ==== ADMIN ROUTES — owned by the Phase 4 admin worker. Append only. ====
+Route::prefix('v1')->group(function () {
+    // --- Menu (guest accessible) ---
+    Route::get('/menu/today', [MenuController::class, 'today'])->name('menu.today');
+
+    // --- Order placement (guest + signed-in, rate-limited) ---
+    Route::post('/orders', [PublicOrderController::class, 'store'])->name('orders.store');
+
+    // --- Order lookup (guest) ---
+    Route::get('/orders/{orderNumber}', [OrderLookupController::class, 'show'])
+        ->name('orders.show');
+
+    // --- Auth (Sanctum) ---
+    Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+        Route::get('/account/orders', [AccountOrderController::class, 'index'])->name('account.orders');
+    });
+});
+
+// ===========================================================================
+// Admin API — Phase 4 (owner only). Append-only; owned by the admin worker.
+// ===========================================================================
+
 Route::prefix('v1/admin')
     ->middleware(['auth:sanctum', 'role:owner'])
     ->group(function (): void {
@@ -32,4 +62,3 @@ Route::prefix('v1/admin')
         Route::get('/orders', [OrderController::class, 'index']);
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
     });
-// ==== END ADMIN ROUTES ====

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Extra extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'daily_meal_id', 'name', 'description', 'price', 'photo_path',
     ];
