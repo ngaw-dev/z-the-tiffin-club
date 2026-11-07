@@ -2,11 +2,16 @@
 
 namespace Tests\Feature\PublicApi;
 
+use App\Events\OrderPlaced;
+use App\Mail\OrderConfirmation;
 use App\Models\DailyMeal;
 use App\Models\Extra;
+use App\Models\Order;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
@@ -222,6 +227,58 @@ class PlaceOrderTest extends TestCase
         ]))->assertStatus(429);
 
         RateLimiter::clear('place-order:127.0.0.1');
+    }
+
+    public function test_order_placed_event_dispatches_when_guest_places_an_order(): void
+    {
+        Event::fake([OrderPlaced::class]);
+
+        $response = $this->postJson('/api/v1/orders', $this->payload([
+            'items' => $this->validItems(),
+        ]));
+
+        $response->assertCreated();
+
+        $order = Order::query()->sole();
+
+        Event::assertDispatched(OrderPlaced::class, function (OrderPlaced $event) use ($order) {
+            return $event->order->id === $order->id
+                && $event->order->items->count() === 2;
+        });
+        Event::assertDispatchedTimes(OrderPlaced::class, 1);
+    }
+
+    public function test_confirmation_mailable_is_queued_when_guest_places_an_order(): void
+    {
+        Mail::fake();
+
+        $response = $this->postJson('/api/v1/orders', $this->payload([
+            'items' => $this->validItems(),
+            'customer_email' => 'guest@example.test',
+        ]));
+
+        $response->assertCreated();
+
+        $order = Order::query()->sole();
+
+        // The listener is queued; Mail::fake records the intercepted send
+        // on both sent and queued collections (same as OrderEmailsTest).
+        Mail::assertQueued(OrderConfirmation::class, function ($mail) use ($order) {
+            return $mail->order->id === $order->id
+                && $mail->hasTo('guest@example.test');
+        });
+        Mail::assertQueued(OrderConfirmation::class, 1);
+    }
+
+    public function test_no_event_dispatched_when_validation_fails(): void
+    {
+        Event::fake([OrderPlaced::class]);
+
+        $this->postJson('/api/v1/orders', $this->payload([
+            'items' => [['item_type' => 'meal', 'quantity' => 6]], // over cap
+        ]))->assertStatus(422);
+
+        Event::assertNotDispatched(OrderPlaced::class);
     }
 
     public function test_order_numbers_are_sequential_and_unique(): void
