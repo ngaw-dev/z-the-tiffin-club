@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Order extends Model
 {
     use HasFactory;
+
     public const STATUSES = [
         'received', 'preparing', 'out_for_delivery', 'ready_for_pickup', 'completed', 'cancelled',
     ];
