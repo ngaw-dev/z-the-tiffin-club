@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Public;
 
+use App\Events\OrderPlaced;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Public\PlaceOrderRequest;
 use App\Http\Resources\OrderSummaryResource;
@@ -68,6 +69,8 @@ class OrderController extends Controller
         }
 
         $order->load('items');
+
+        OrderPlaced::dispatch($order);
 
         return (new OrderSummaryResource($order))
             ->response()
