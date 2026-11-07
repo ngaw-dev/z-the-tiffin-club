@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsOwner;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -20,7 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'role' => EnsureUserIsOwner::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Uniform JSON error envelope for every API request. Every failure is
