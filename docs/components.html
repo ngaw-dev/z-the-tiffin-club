@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Tiffin Box — Design System Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --background: #FAF6EF;
+    --foreground: #1E1B16;
+    --card: #FFFFFF;
+    --card-foreground: #1E1B16;
+    --popover: #FFFFFF;
+    --popover-foreground: #1E1B16;
+    --primary: #D9401F;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F4EFE6;
+    --secondary-foreground: #1E1B16;
+    --muted: #F0EAE0;
+    --muted-foreground: #6F675C;
+    --accent: #E8A13A;
+    --accent-foreground: #1E1B16;
+    --destructive: #B91C1C;
+    --border: rgba(30, 27, 22, 0.10);
+    --input: rgba(30, 27, 22, 0.15);
+    --ring: #D9401F;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    --shadow-card: 0 1px 3px 0 rgba(30,27,22,0.04), 0 1px 2px -1px rgba(30,27,22,0.04);
+    --shadow-soft: 0 8px 30px -4px rgba(30,27,22,0.08);
+    --shadow-float: 0 20px 40px -8px rgba(30,27,22,0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Inter, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .container { max-width: 1024px; margin: 0 auto; padding: 48px 20px 96px; }
+  @media (min-width: 768px) { .container { padding: 48px 32px 120px; } }
+
+  /* ---------- Page header ---------- */
+  .page-head { margin-bottom: 56px; border-bottom: 1px solid var(--border); padding-bottom: 40px; }
+  .eyebrow {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--muted-foreground);
+  }
+  h1.display {
+    font-family: Fraunces, serif; font-optical-sizing: auto;
+    font-weight: 600; font-size: clamp(2.5rem, 7vw, 4rem);
+    line-height: 1.05; letter-spacing: -0.03em; margin-top: 16px;
+  }
+  h1.display em { font-style: italic; }
+  .lead { font-size: 1.125rem; line-height: 1.6; color: var(--muted-foreground); margin-top: 16px; max-width: 56ch; }
+
+  /* ---------- Section scaffolding ---------- */
+  section { margin-bottom: 72px; scroll-margin-top: 24px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+  h2 {
+    font-family: Fraunces, serif; font-weight: 600; font-size: 2.25rem;
+    line-height: 1.15; letter-spacing: -0.02em;
+  }
+  .section-num {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--primary);
+  }
+  .spec { font-size: 0.8125rem; font-weight: 500; color: var(--muted-foreground); margin-bottom: 20px; }
+
+  /* ---------- Typography samples ---------- */
+  .type-row { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  @media (min-width: 768px) { .type-row { grid-template-columns: 200px 1fr; gap: 24px; } }
+  .type-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted-foreground); padding-top: 8px; }
+  .t-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; }
+  .t-h1 { font-family: Fraunces, serif; font-weight: 600; font-size: 4rem; line-height: 1.05; letter-spacing: -0.03em; }
+  .t-h2 { font-family: Fraunces, serif; font-weight: 600; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.02em; }
+  .t-h3 { font-family: Fraunces, serif; font-weight: 600; font-size: 1.35rem; line-height: 1.3; letter-spacing: -0.01em; }
+  .t-lead { font-size: 1.125rem; line-height: 1.6; }
+  .t-body { font-size: 0.9375rem; line-height: 1.6; }
+  .t-meta { font-size: 0.8125rem; font-weight: 500; line-height: 1.5; }
+  .t-btn { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.01em; }
+
+  /* ---------- Color swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+  .swatch { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); }
+  .swatch .chip { height: 72px; }
+  .swatch .meta { padding: 12px 14px; }
+  .swatch .name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .swatch .val { font-size: 0.75rem; color: var(--muted-foreground); }
+
+  /* ---------- Buttons ---------- */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .btn {
+    font-family: Inter, sans-serif; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.01em;
+    border: none; cursor: pointer; border-radius: var(--radius-full);
+    padding: 0 26px; height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 200ms ease-out;
+  }
+  .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .btn:active { transform: scale(0.98); box-shadow: inset 0 2px 6px rgba(0,0,0,0.15); }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); }
+  .btn-primary:hover { background: var(--foreground); }
+  .btn-dark { background: var(--foreground); color: var(--background); }
+  .btn-dark:hover { background: var(--primary); color: #fff; }
+  .btn-outline { background: transparent; color: var(--foreground); border: 1px solid rgba(30,27,22,0.15); }
+  .btn-outline:hover { background: rgba(30,27,22,0.05); border-color: var(--foreground); }
+  .btn[disabled], .btn.btn-soldout {
+    background: rgba(30,27,22,0.06); color: var(--muted-foreground);
+    cursor: not-allowed; opacity: 0.85; pointer-events: none;
+  }
+  .btn-sm { height: 38px; padding: 0 18px; font-size: 0.8125rem; }
+
+  /* ---------- Inputs ---------- */
+  .form-grid { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 560px; }
+  @media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } .form-grid .full { grid-column: 1 / -1; } }
+  .field label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; }
+  .field input {
+    width: 100%; height: 48px; padding: 0 18px; background: var(--card);
+    border: 1px solid rgba(30,27,22,0.18); border-radius: var(--radius-md);
+    font: inherit; color: var(--foreground);
+  }
+  .field input::placeholder { color: rgba(111,103,92,0.6); }
+  .field input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217,64,31,0.12); }
+  .field input.error { border-color: var(--destructive); box-shadow: 0 0 0 3px rgba(185,28,28,0.12); }
+  .field .hint { font-size: 0.75rem; color: var(--muted-foreground); margin-top: 6px; }
+  .field .hint.err { color: var(--destructive); }
+
+  /* ---------- Badges ---------- */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: var(--radius-full); padding: 5px 12px;
+  }
+  .badge-status { background: var(--foreground); color: var(--background); }
+  .badge-price {
+    background: rgba(217,64,31,0.10); color: var(--primary);
+    font-family: Fraunces, serif; font-weight: 600; font-size: 1.5rem;
+    letter-spacing: 0; text-transform: none; padding: 8px 20px;
+  }
+  .badge-counter { background: var(--accent); color: var(--accent-foreground); letter-spacing: 0.06em; }
+  .badge-outline { border: 1px solid var(--border); color: var(--muted-foreground); background: transparent; }
+
+  /* ---------- Quantity pill ---------- */
+  .qty { display: inline-flex; align-items: center; gap: 0; background: var(--secondary); border-radius: var(--radius-full); padding: 4px; }
+  .qty button {
+    width: 38px; height: 38px; border-radius: var(--radius-full); border: none; cursor: pointer;
+    background: var(--card); color: var(--foreground); font-size: 1rem; font-weight: 600;
+    box-shadow: var(--shadow-card); transition: all 200ms ease-out;
+  }
+  .qty button:hover { background: var(--primary); color: #fff; }
+  .qty .value { width: 44px; text-align: center; font-weight: 600; font-size: 0.9375rem; }
+
+  /* ---------- Dish card ---------- */
+  .dish-card {
+    background: var(--card); border: 1px solid rgba(30,27,22,0.06);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-soft); overflow: hidden;
+    max-width: 480px; transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+  }
+  .dish-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-float); }
+  .dish-img { aspect-ratio: 4/3; background: linear-gradient(135deg, #E8A13A 0%, #D9401F 60%, #B91C1C 100%); display: flex; align-items: center; justify-content: center; }
+  .dish-img svg { width: 72px; height: 72px; stroke: rgba(250,246,239,0.9); }
+  .dish-body { padding: 28px; }
+  .dish-body .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  h3.dish-title { font-family: Fraunces, serif; font-weight: 600; font-size: 1.35rem; line-height: 1.3; letter-spacing: -0.01em; }
+  .dish-desc { color: var(--muted-foreground); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 20px; }
+  .gauge { margin-bottom: 24px; }
+  .gauge .label { display: flex; justify-content: space-between; font-size: 0.8125rem; font-weight: 500; color: var(--muted-foreground); margin-bottom: 8px; }
+  .gauge .track { height: 6px; border-radius: var(--radius-full); background: var(--muted); overflow: hidden; }
+  .gauge .fill { height: 100%; width: 62%; border-radius: var(--radius-full); background: var(--primary); }
+  .dish-card .btn { width: 100%; }
+
+  /* ---------- Accordion ---------- */
+  .accordion { display: grid; gap: 12px; max-width: 720px; }
+  details {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 22px 26px; box-shadow: var(--shadow-card);
+    transition: border-color 200ms ease-out;
+  }
+  details[open] { border-color: rgba(217,64,31,0.4); }
+  summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    font-family: Fraunces, serif; font-weight: 600; font-size: 1.35rem; letter-spacing: -0.01em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { flex-shrink: 0; transition: transform 200ms ease-out; stroke: var(--primary); }
+  details[open] summary svg { transform: rotate(180deg); }
+  details p { color: var(--muted-foreground); margin-top: 16px; line-height: 1.6; }
+
+  /* ---------- CTA banner ---------- */
+  .cta-banner {
+    background: var(--foreground); color: var(--background);
+    border-radius: var(--radius-xl); padding: 56px 40px; text-align: center;
+  }
+  .cta-banner h2 { color: var(--background); }
+  .cta-banner p { color: rgba(250,246,239,0.7); max-width: 46ch; margin: 14px auto 28px; }
+
+  /* ---------- Icons ---------- */
+  .icon-row { display: flex; flex-wrap: wrap; gap: 28px; }
+  .icon-cell { text-align: center; }
+  .icon-cell svg { width: 44px; height: 44px; stroke: var(--foreground); margin-bottom: 8px; }
+  .icon-cell span { display: block; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-foreground); }
+
+  .divider { height: 1px; background: var(--border); margin: 72px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ================= Header ================= -->
+  <header class="page-head">
+    <p class="eyebrow">The Tiffin Box · Design System</p>
+    <h1 class="display">The menu is <em>already decided.</em></h1>
+    <p class="lead">Component library preview built from <strong>DESIGN.md</strong> — warm paper, deep ink, and one incandescent ember. Every primitive below is a live specimen.</p>
+    <p class="eyebrow num" style="margin-top:24px; color: var(--primary);">Edition No. 042 · Today's Dish</p>
+  </header>
+
+  <!-- ================= 1. Typography ================= -->
+  <section id="typography">
+    <div class="section-head"><span class="section-num">01</span><h2>Typography</h2></div>
+    <p class="spec">Fraunces (display serif, optical sizing) + Inter (UI sans). Tabular figures for prices, timers, and serials.</p>
+    <div class="type-row"><span class="type-label">Eyebrow / Kicker</span><span class="t-eyebrow">Daily Edition · Wellington</span></div>
+    <div class="type-row"><span class="type-label">Hero Title H1</span><span class="t-h1">One dish. <em>Zero regrets.</em></span></div>
+    <div class="type-row"><span class="type-label">Section Title H2</span><span class="t-h2">Today's dish</span></div>
+    <div class="type-row"><span class="type-label">Component H3</span><span class="t-h3">Butter Chicken Tiffin Box</span></div>
+    <div class="type-row"><span class="type-label">Lead / Subhead</span><span class="t-lead">Slow-cooked overnight, finished with cream and kasuri methi, served with jeera rice and two rotis.</span></div>
+    <div class="type-row"><span class="type-label">Body</span><span class="t-body">Every morning our kitchen decides on a single dish and cooks a limited batch. When it's gone, it's gone — no menu, no options, no negotiations.</span></div>
+    <div class="type-row"><span class="type-label">Body Small / Meta</span><span class="t-meta num">Portions: 37 / 60 left · Cutoff 4:00 PM</span></div>
+    <div class="type-row" style="border-bottom:none;"><span class="type-label">Button / Action</span><span class="t-btn">Reserve my tiffin</span></div>
+  </section>
+
+  <!-- ================= 2. Color ================= -->
+  <section id="color">
+    <div class="section-head"><span class="section-num">02</span><h2>Color Tokens</h2></div>
+    <p class="spec">shadcn/ui semantic tokens over a warm-paper palette.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#FAF6EF; border-bottom:1px solid var(--border)"></div><div class="meta"><div class="name">Background</div><div class="val num">#FAF6EF</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#1E1B16"></div><div class="meta"><div class="name">Foreground</div><div class="val num">#1E1B16</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#D9401F"></div><div class="meta"><div class="name">Primary</div><div class="val num">#D9401F</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F4EFE6"></div><div class="meta"><div class="name">Secondary</div><div class="val num">#F4EFE6</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F0EAE0"></div><div class="meta"><div class="name">Muted</div><div class="val num">#F0EAE0</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6F675C"></div><div class="meta"><div class="name">Muted Fg</div><div class="val num">#6F675C</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#E8A13A"></div><div class="meta"><div class="name">Accent</div><div class="val num">#E8A13A</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#B91C1C"></div><div class="meta"><div class="name">Destructive</div><div class="val num">#B91C1C</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF; border-bottom:1px solid var(--border)"></div><div class="meta"><div class="name">Card</div><div class="val num">#FFFFFF</div></div></div>
+    </div>
+  </section>
+
+  <!-- ================= 3. Buttons ================= -->
+  <section id="buttons">
+    <div class="section-head"><span class="section-num">03</span><h2>Buttons</h2></div>
+    <p class="spec">Primary hovers to ink; dark hovers to ember. Press scales to 0.98. Focus ring: ember, 2px offset.</p>
+    <div class="btn-row">
+      <button class="btn btn-primary">Reserve my tiffin</button>
+      <button class="btn btn-dark">Sign in</button>
+      <button class="btn btn-outline">View order history</button>
+      <button class="btn btn-soldout num">Sold out — see you tomorrow at 9am</button>
+      <button class="btn btn-primary btn-sm">Add to order</button>
+      <button class="btn btn-outline btn-sm">Cancel</button>
+    </div>
+  </section>
+
+  <!-- ================= 4. Inputs ================= -->
+  <section id="inputs">
+    <div class="section-head"><span class="section-num">04</span><h2>Form Inputs</h2></div>
+    <p class="spec">48px fields, stacked labels, ember focus glow, destructive error state.</p>
+    <div class="form-grid">
+      <div class="field"><label for="name">Full name</label><input id="name" placeholder="Amol Walker" /></div>
+      <div class="field"><label for="phone">Phone</label><input id="phone" placeholder="+64 21 555 0134" /></div>
+      <div class="field full"><label for="email">Email</label><input id="email" placeholder="you@example.com" /><p class="hint">Order confirmation and updates are sent here.</p></div>
+      <div class="field full"><label for="addr">Delivery address</label><input id="addr" class="error" value="12 Somewhere Rd" /><p class="hint err">Delivery is limited to Wellington city at launch.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= 5. Badges ================= -->
+  <section id="badges">
+    <div class="section-head"><span class="section-num">05</span><h2>Badges & Indicators</h2></div>
+    <p class="spec">Status stamps, price badge, and saffron daily counter — all tabular where numeric.</p>
+    <div class="badge-row">
+      <span class="badge badge-status">Available until sold out</span>
+      <span class="badge badge-status num">Portions: 37 / 60 left</span>
+      <span class="badge badge-price num">$14.00</span>
+      <span class="badge badge-counter num">No. 042</span>
+      <span class="badge badge-outline num">Pickup 6–8 PM</span>
+    </div>
+    <div style="margin-top:28px; display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
+      <span class="t-meta" style="color:var(--muted-foreground)">Quantity pill (max 5 meals):</span>
+      <div class="qty" id="qty">
+        <button type="button" aria-label="Decrease" onclick="stepQty(-1)">−</button>
+        <span class="value num" id="qtyVal">1</span>
+        <button type="button" aria-label="Increase" onclick="stepQty(1)">+</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6. Dish card ================= -->
+  <section id="card">
+    <div class="section-head"><span class="section-num">06</span><h2>Dish Showcase Card</h2></div>
+    <p class="spec">Elevated card with category tag, price badge, portion gauge, and full-width CTA. Lifts 2px on hover.</p>
+    <div class="dish-card">
+      <div class="dish-img" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16"/><path d="M6 10v6a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-6"/><path d="M9 6c0-1 1-1.5 1-2.5"/><path d="M13 6c0-1 1-1.5 1-2.5"/><path d="M17 6c0-1 1-1.5 1-2.5"/></svg>
+      </div>
+      <div class="dish-body">
+        <div class="top">
+          <div>
+            <span class="badge badge-counter num" style="margin-bottom:10px;">No. 042 · Today</span>
+            <h3 class="dish-title">Butter Chicken Tiffin Box</h3>
+          </div>
+          <span class="badge badge-price num">$14.00</span>
+        </div>
+        <p class="dish-desc">Overnight-marinated chicken simmered in tomato, butter, and cream. Served with jeera rice, two tandoori rotis, and a slit green chilli.</p>
+        <div class="gauge">
+          <div class="label num"><span>Portions remaining</span><span>37 / 60</span></div>
+          <div class="track"><div class="fill"></div></div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="qty">
+            <button type="button" aria-label="Decrease" onclick="stepCardQty(-1)">−</button>
+            <span class="value num" id="cardQtyVal">1</span>
+            <button type="button" aria-label="Increase" onclick="stepCardQty(1)">+</button>
+          </div>
+          <button class="btn btn-primary" style="flex:1;">Add to order</button>
+        </div>
+        <p class="hint" style="margin-top:10px; font-size:0.75rem; color:var(--muted-foreground);">Pay on handover — cash or card. Delivery cutoff 4:00 PM · Pickup until 8:00 PM.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7. Accordion ================= -->
+  <section id="accordion">
+    <div class="section-head"><span class="section-num">07</span><h2>FAQ Accordion</h2></div>
+    <p class="spec">Fraunces question headers, rotating chevron, ember highlight border on expand.</p>
+    <div class="accordion">
+      <details open>
+        <summary>Why is there only one dish?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Each morning the kitchen commits to a single dish and cooks it in a limited batch. It keeps the food exceptional and the decision effortless — no menu, no options, no negotiations.</p>
+      </details>
+      <details>
+        <summary>When does ordering close?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Delivery orders close at 4:00 PM. Pickup orders stay open until 8:00 PM, when the pickup window (6–8 PM) ends. Same-day orders only — no pre-ordering at launch.</p>
+      </details>
+      <details>
+        <summary>How do I pay?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Pay on handover — cash or card machine at the door for delivery, or at the counter for pickup. There's no online payment at launch.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= 8. Icons ================= -->
+  <section id="icons">
+    <div class="section-head"><span class="section-num">08</span><h2>Iconography</h2></div>
+    <p class="spec">Mono-line vectors, 1.75px stroke, rounded caps and joins.</p>
+    <div class="icon-row">
+      <div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16"/><path d="M6 10v6a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-6"/><path d="M9 6c0-1 1-1.5 1-2.5"/><path d="M13 6c0-1 1-1.5 1-2.5"/></svg><span>Small Batch</span></div>
+      <div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span>Daily Stamp</span></div>
+      <div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m9 10 6 6m0-6-6 6"/></svg><span>No Choices</span></div>
+      <div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Cutoff 4 PM</span></div>
+      <div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-7-10a4.6 4.6 0 0 1 7-3.9A4.6 4.6 0 0 1 19 11c0 5.4-7 10-7 10Z"/></svg><span>Pickup 6–8</span></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ================= CTA banner ================= -->
+  <section>
+    <div class="cta-banner">
+      <p class="eyebrow" style="color: rgba(250,246,239,0.6);">Today only · No. 042</p>
+      <h2 style="margin-top:12px;">Sold out means <em style="font-style:italic;">sold out.</em></h2>
+      <p>One dish a day, cooked in a limited batch. Reserve yours before the 4 PM cutoff.</p>
+      <button class="btn btn-primary">Reserve my tiffin</button>
+    </div>
+  </section>
+
+</div>
+<script>
+  function stepQty(d){ const el=document.getElementById('qtyVal'); const v=Math.min(5,Math.max(1,parseInt(el.textContent)+d)); el.textContent=v; }
+  function stepCardQty(d){ const el=document.getElementById('cardQtyVal'); const v=Math.min(5,Math.max(1,parseInt(el.textContent)+d)); el.textContent=v; }
+</script>
+</body>
+</html>
