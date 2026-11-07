@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class DailyMeal extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'menu_date', 'name', 'description', 'price', 'photo_path', 'max_per_order',
     ];
