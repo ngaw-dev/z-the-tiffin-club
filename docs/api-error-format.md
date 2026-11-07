@@ -36,8 +36,8 @@ Covered by `tests/Feature/ApiErrorFormatTest.php`.
 ## OpenAPI / Scribe
 
 Scribe is installed and configured (`config/scribe.php`) to document `api/*` routes.
-Full generation intentionally **waits until the Phase 2–5 PRs merge** so we never
-publish docs for endpoints that don't exist. After merge run:
+Storefront/email endpoints are now merged; final generation waits for the remaining
+phase PR (Phase 4 admin) so the docs cover the complete API. After merge run:
 
 ```bash
 ddev artisan scribe:generate

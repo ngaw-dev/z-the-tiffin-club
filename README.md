@@ -49,21 +49,23 @@ All endpoints live under `/api/v1` and return a uniform JSON envelope:
 
 | Method | Endpoint | Phase | Status |
 | --- | --- | --- | --- |
-| GET | `/api/v1/menu/today` | 3 — Storefront | In flight |
-| POST | `/api/v1/orders` | 3 — Storefront | In flight |
-| GET | `/api/v1/orders/{orderNumber}` | 3 — Storefront | In flight |
-| POST | `/api/v1/auth/register` | 3 — Storefront | In flight |
-| POST | `/api/v1/auth/login` | 3 — Storefront | In flight |
-| POST | `/api/v1/auth/logout` | 3 — Storefront | In flight |
-| GET | `/api/v1/account/orders` | 3 — Storefront | In flight |
-| POST | `/api/v1/admin/meals` | 4 — Admin | In flight |
-| PUT/DELETE | `/api/v1/admin/meals/{date}` | 4 — Admin | In flight |
-| GET/PUT | `/api/v1/admin/settings` | 4 — Admin | In flight |
-| GET | `/api/v1/admin/orders` | 4 — Admin | In flight |
-| PATCH | `/api/v1/admin/orders/{id}/status` | 4 — Admin | In flight |
+| GET | `/api/v1/menu/today` | 3 — Storefront | Merged |
+| POST | `/api/v1/orders` | 3 — Storefront | Merged |
+| GET | `/api/v1/orders/{orderNumber}` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/register` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/login` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/logout` | 3 — Storefront | Merged |
+| GET | `/api/v1/account/orders` | 3 — Storefront | Merged |
+| POST | `/api/v1/admin/meals` | 4 — Admin | In flight (PR #6) |
+| PUT/DELETE | `/api/v1/admin/meals/{date}` | 4 — Admin | In flight (PR #6) |
+| GET/PUT | `/api/v1/admin/settings` | 4 — Admin | In flight (PR #6) |
+| GET | `/api/v1/admin/orders` | 4 — Admin | In flight (PR #6) |
+| PATCH | `/api/v1/admin/orders/{id}/status` | 4 — Admin | In flight (PR #6) |
 
-"In flight" = endpoint is being built in a parallel phase PR and not yet merged.
-Phases 0–1 (scaffold + domain model) are merged; see `docs/` for the ERD.
+Phases 0–3 and 5 (scaffold, domain model, business rules, storefront, emails) are
+merged; Phase 4 (admin) is in flight on PR #6. Order confirmation and status-update
+emails are queued on order placement / status change and land in Mailpit locally.
+See `docs/` for the ERD.
 
 ## Settings Defaults
 
@@ -87,8 +89,10 @@ The future frontend origin is configurable, not hard-coded: set `FRONTEND_URL`
 
 ## API Documentation (Scribe)
 
-Scribe is configured (`config/scribe.php`) but **docs are generated only after the
-Phase 2–5 PRs merge**, so we don't document endpoints that don't exist yet. After merge:
+Scribe is configured (`config/scribe.php`) to document `api/*` routes. Storefront
+and email flows are merged, but full generation waits until the remaining phase PRs
+(Phase 4 admin, PR #6) merge so the docs cover the complete API in one pass. After
+merge:
 
 ```bash
 ddev artisan scribe:generate   # writes static docs + OpenAPI spec
@@ -103,8 +107,7 @@ ddev bin phpstan analyse       # static analysis (Larastan, level 5)
 ```
 
 GitHub Actions (`.github/workflows/ci.yml`) runs Pint, PHPStan and the full test
-suite on PHP 8.3 against a MySQL 8 service on every push and PR. Endpoint tests
-owned by Phases 2–5 land with those PRs.
+suite on PHP 8.3 against a MySQL 8 service on every push and PR.
 
 Note: PHPStan currently analyses `app/`, `bootstrap/` and `config/`; widening it to
 `database/` and `tests/` needs `@property` docblocks on the Phase 1 models — tracked
