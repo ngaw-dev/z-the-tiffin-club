@@ -1,0 +1,14 @@
+services:
+  mailpit:
+    container_name: ddev-${DDEV_SITENAME}-mailpit
+    image: axllent/mailpit:latest
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    expose:
+      - "1025"
+      - "8025"
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=8025:8025
+      - HTTPS_EXPOSE=8026:8025
