@@ -1,59 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# The Tiffin Box — Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 12 API-only backend for The Tiffin Box, a daily tiffin-meal ordering service.
+**This repository is the API only** — all responses are JSON; the customer/owner frontend
+will live in a separate repository added later. (The Phase 0 Laravel scaffold still ships
+default Blade/Vite boilerplate like `resources/views` and `vite.config.js`; these are
+unused by the API and marked for later cleanup.)
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3 / Laravel 12 (API-only)
+- MySQL 8
+- DDEV for local development (includes Mailpit for email capture)
+- Laravel Sanctum (auth), Scribe (OpenAPI docs), Pint + Larastan + PHPUnit (quality)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## DDEV Quickstart
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+ddev start                 # bring up the project (https://the-tiffin-box.ddev.site)
+ddev composer install      # install dependencies (first run only)
+ddev exec cp .env.example .env && ddev artisan key:generate
+ddev artisan migrate       # run migrations
+ddev artisan db:seed       # seed dev data (today's meal, extras, owner user, sample orders)
+ddev artisan test          # run the test suite
+```
 
-## Learning Laravel
+Useful commands:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Command | What it does |
+| --- | --- |
+| `ddev describe` | Show service URLs/ports (web, DB, Mailpit) |
+| `ddev launch` | Open the app in your browser |
+| `ddev artisan scribe:generate` | Regenerate API docs (see below) |
+| `ddev php -v` | Verify PHP 8.3 |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Mailpit is available at the `mailpit` HTTPS port shown by `ddev describe` — order
+confirmation and status-update emails (Phase 5) land there locally.
 
-## Laravel Sponsors
+> If you run DDEV alongside other DDEV projects from sibling worktrees and hit a
+> project-name/port conflict, rename the project locally (uncommitted edit of `name:`
+> in `.ddev/config.yaml`) or use `ddev config --ports` — never stop another worker's project.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## API Overview
 
-### Premium Partners
+All endpoints live under `/api/v1` and return a uniform JSON envelope:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Success: `{ "message": ..., "data": ..., "status": 200 }`
+- Error:   `{ "message": ..., "errors": {...}|null, "status": 4xx }`
 
-## Contributing
+| Method | Endpoint | Phase | Status |
+| --- | --- | --- | --- |
+| GET | `/api/v1/menu/today` | 3 — Storefront | Merged |
+| POST | `/api/v1/orders` | 3 — Storefront | Merged |
+| GET | `/api/v1/orders/{orderNumber}` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/register` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/login` | 3 — Storefront | Merged |
+| POST | `/api/v1/auth/logout` | 3 — Storefront | Merged |
+| GET | `/api/v1/account/orders` | 3 — Storefront | Merged |
+| POST | `/api/v1/admin/meals` | 4 — Admin | In flight (PR #6) |
+| PUT/DELETE | `/api/v1/admin/meals/{date}` | 4 — Admin | In flight (PR #6) |
+| GET/PUT | `/api/v1/admin/settings` | 4 — Admin | In flight (PR #6) |
+| GET | `/api/v1/admin/orders` | 4 — Admin | In flight (PR #6) |
+| PATCH | `/api/v1/admin/orders/{id}/status` | 4 — Admin | In flight (PR #6) |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Phases 0–3 and 5 (scaffold, domain model, business rules, storefront, emails) are
+merged; Phase 4 (admin) is in flight on PR #6. Order confirmation and status-update
+emails are queued on order placement / status change and land in Mailpit locally.
+See `docs/` for the ERD.
 
-## Code of Conduct
+## Settings Defaults
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Owner-configurable via the `settings` table (Phase 4 `PUT /api/v1/admin/settings`):
 
-## Security Vulnerabilities
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `delivery_cutoff` | `16:00` | Last time to place a delivery order |
+| `pickup_cutoff` | `20:00` | Last time to place a pickup order |
+| `pickup_window_start` | `18:00` | Pickup window opens |
+| `pickup_window_end` | `20:00` | Pickup window closes |
+| `ordering_open` | `1` | Manual open/close override |
+| `restaurant_address` | `123 Cuba Street, Wellington` | Pickup address |
+| `delivery_city` | `Wellington` | Only city eligible for delivery |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## CORS
 
-## License
+The future frontend origin is configurable, not hard-coded: set `FRONTEND_URL`
+(defaults to `http://localhost:5173` for dev) and optionally `CORS_ALLOWED_ORIGINS`
+(comma-separated) in `.env`. See `config/cors.php`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## API Documentation (Scribe)
+
+Scribe is configured (`config/scribe.php`) to document `api/*` routes. Storefront
+and email flows are merged, but full generation waits until the remaining phase PRs
+(Phase 4 admin, PR #6) merge so the docs cover the complete API in one pass. After
+merge:
+
+```bash
+ddev artisan scribe:generate   # writes static docs + OpenAPI spec
+```
+
+## Testing & CI
+
+```bash
+ddev artisan test              # full suite (phpunit.xml uses in-memory SQLite)
+ddev bin pint --test           # code style
+ddev bin phpstan analyse       # static analysis (Larastan, level 5)
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs Pint, PHPStan and the full test
+suite on PHP 8.3 against a MySQL 8 service on every push and PR.
+
+Note: PHPStan currently analyses `app/`, `bootstrap/` and `config/`; widening it to
+`database/` and `tests/` needs `@property` docblocks on the Phase 1 models — tracked
+as follow-up.

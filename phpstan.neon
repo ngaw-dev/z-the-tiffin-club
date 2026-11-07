@@ -1,0 +1,12 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        # Scoped to framework-owned + shared code for now. database/ and tests/
+        # need @property docblocks on the Phase 1 models (sibling-owned files)
+        # before they can be analysed at level 5 — widen paths once those land.
+        - app
+        - bootstrap
+        - config

@@ -46,6 +46,7 @@ class PlaceOrderRequest extends FormRequest
     /** The signed-in user, or null for guests. */
     public function resolvedUser(): ?User
     {
+        /** @var User|null */
         return $this->user();
     }
 }

@@ -21,7 +21,7 @@ class OrderController extends Controller
      */
     public function store(PlaceOrderRequest $request, OrderValidationService $validation): JsonResponse
     {
-        $key = 'place-order:'.($request->resolvedUser()?->id ?? $request->ip());
+        $key = 'place-order:'.($request->resolvedUser()->id ?? $request->ip());
 
         $allowed = RateLimiter::attempt(
             $key,

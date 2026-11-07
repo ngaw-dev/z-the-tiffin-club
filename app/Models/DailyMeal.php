@@ -5,7 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property Carbon|null $menu_date
+ * @property string $name
+ * @property string|null $description
+ * @property string $price
+ * @property string|null $photo_path
+ * @property int $max_per_order
+ */
 class DailyMeal extends Model
 {
     use HasFactory;
@@ -23,6 +32,7 @@ class DailyMeal extends Model
         ];
     }
 
+    /** @return HasMany<Extra, $this> */
     public function extras(): HasMany
     {
         return $this->hasMany(Extra::class);

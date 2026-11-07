@@ -6,7 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $order_number
+ * @property int|null $user_id
+ * @property string $fulfilment_type
+ * @property string $status
+ * @property string $customer_name
+ * @property string $customer_email
+ * @property string $customer_phone
+ * @property string|null $delivery_address
+ * @property string $payment_method
+ * @property string $order_total
+ * @property Carbon|null $ordered_at
+ */
 class Order extends Model
 {
     use HasFactory;
@@ -34,6 +49,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** @return HasMany<OrderItem, $this> */
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
