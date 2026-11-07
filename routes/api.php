@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Public\AccountOrderController;
 use App\Http\Controllers\Api\V1\Public\AuthController;
 use App\Http\Controllers\Api\V1\Public\MenuController;
+use App\Http\Controllers\Api\V1\Public\OrderController;
 use App\Http\Controllers\Api\V1\Public\OrderLookupController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     // --- Menu (guest accessible) ---
     Route::get('/menu/today', [MenuController::class, 'today'])->name('menu.today');
+
+    // --- Order placement (guest + signed-in, rate-limited) ---
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     // --- Order lookup (guest) ---
     Route::get('/orders/{orderNumber}', [OrderLookupController::class, 'show'])
