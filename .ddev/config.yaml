@@ -1,0 +1,17 @@
+name: the-tiffin-box
+type: laravel
+docroot: public
+php_version: "8.3"
+webserver_type: nginx-fpm
+xdebug_enabled: false
+database:
+  type: mysql
+  version: "8.0"
+use_dns_when_possible: true
+composer_version: "2"
+web_environment:
+  - DB_HOST=db
+  - DB_DATABASE=db
+  - DB_USERNAME=db
+  - DB_PASSWORD=db
+nodejs_version: "20"
