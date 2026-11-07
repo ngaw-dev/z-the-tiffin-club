@@ -1,0 +1,275 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Dish — The menu is already decided.</title>
+  <meta name="description" content="One Dish serves exactly one dish per day, chosen by the restaurant. No menu. No options. Sold out means sold out.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF6EF',
+            ink: '#1E1B16',
+            ember: '#D9401F',
+            saffron: '#E8A13A',
+            stone: '#6F675C',
+          },
+          fontFamily: {
+            display: ['Fraunces', 'serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            soft: '0 6px 24px rgba(30, 27, 22, 0.08)',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dish-counter-num { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-cream text-ink antialiased">
+
+  <!-- Header nav -->
+  <header class="sticky top-0 z-10 border-b border-ink/10 bg-cream/90 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
+      <a href="#" class="font-display text-2xl font-semibold tracking-tight">One Dish<span class="text-ember">.</span></a>
+      <nav>
+        <ul class="hidden md:flex gap-7 text-sm font-medium text-stone">
+          <li><a href="#todays-dish" class="hover:text-ink transition-colors">Today's dish</a></li>
+          <li><a href="#order" class="hover:text-ink transition-colors">Order now</a></li>
+          <li><a href="#how-it-works" class="hover:text-ink transition-colors">How it works</a></li>
+          <li><a href="#faq" class="hover:text-ink transition-colors">FAQ</a></li>
+        </ul>
+      </nav>
+      <a href="#order" class="rounded-full bg-ink text-cream text-sm font-semibold px-4 py-2 hover:bg-ember transition-colors">Order today</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="text-center py-16 sm:py-24">
+      <div class="max-w-3xl mx-auto px-5 sm:px-8">
+        <p class="text-xs sm:text-sm uppercase tracking-[0.25em] text-ember font-semibold">No menu &middot; No options &middot; No negotiations</p>
+        <h1 class="font-display font-semibold text-5xl sm:text-6xl lg:text-7xl leading-[1.05] mt-6 text-balance">
+          The menu is <span class="italic text-ember">already decided.</span>
+        </h1>
+        <p class="mt-6 text-base sm:text-lg text-stone max-w-xl mx-auto">
+          One dish per day. Chosen by the restaurant, not by you.
+          No menu, no options — just today's best.
+        </p>
+        <a href="#todays-dish" class="mt-8 inline-block rounded-full bg-ember text-white font-semibold px-8 py-3.5 shadow-soft hover:bg-ink transition-colors">
+          Show me today's dish
+        </a>
+        <p class="dish-counter-num mt-10 font-display text-sm text-stone">
+          Daily dish <span class="text-ink font-semibold">No. 042</span> &mdash; 41 sold out, 41 we were right about
+        </p>
+      </div>
+    </section>
+
+    <!-- Today's dish showcase -->
+    <section id="todays-dish" class="pb-20 sm:pb-28">
+      <div class="max-w-3xl mx-auto px-5 sm:px-8">
+        <!--
+          "Sold out" state variant:
+          When today's dish is sold out, replace the "Order today's dish" link with:
+            <button disabled class="w-full rounded-full bg-ink/10 text-stone px-8 py-3.5 font-semibold cursor-not-allowed">Sold out — see you tomorrow</button>
+          and change the badge below from "Available until sold out" to "Sold out".
+        -->
+        <div class="rounded-3xl bg-white shadow-soft border border-ink/5 overflow-hidden">
+          <div class="grid md:grid-cols-2">
+            <div class="relative aspect-[4/3] md:aspect-auto md:min-h-[380px] bg-saffron/20">
+              <!-- Dish photo placeholder -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-6xl">🍛</span>
+              </div>
+              <span class="absolute top-4 left-4 rounded-full bg-ink text-cream text-xs font-semibold px-3 py-1.5 uppercase tracking-wider">
+                Available until sold out
+              </span>
+            </div>
+            <div class="p-8 sm:p-10 flex flex-col justify-center">
+              <p class="text-xs uppercase tracking-[0.25em] text-stone font-semibold">Today &middot; available until 6pm</p>
+              <h2 class="font-display font-semibold text-3xl sm:text-4xl mt-3 leading-tight">
+                Butter Chicken
+              </h2>
+              <p class="mt-3 text-stone leading-relaxed">
+                Slow-simmered, straight from the kitchen. With rice and fresh naan.
+              </p>
+              <div class="mt-6 flex items-center gap-4">
+                <span class="dish-counter-num rounded-full bg-ember/10 text-ember font-display font-semibold text-2xl px-5 py-2">
+                  $14.00
+                </span>
+                <span class="text-sm text-stone">
+                  <span class="dish-counter-num font-semibold text-ink">37</span> of 60 portions left
+                </span>
+              </div>
+              <a href="#order" class="mt-8 inline-flex justify-center rounded-full bg-ink text-cream font-semibold px-8 py-3.5 hover:bg-ember transition-colors">
+                Order today's dish
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order now -->
+    <section id="order" class="pb-20 sm:pb-28">
+      <div class="max-w-xl mx-auto px-5 sm:px-8">
+        <div class="rounded-3xl bg-white shadow-soft border border-ink/5 p-8 sm:p-10">
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl">Order today's dish</h2>
+          <p class="mt-3 text-stone">Tell us where to bring it. One dish, no options.</p>
+
+          <!--
+            The price in the submit button is duplicated from the today's-dish showcase ($14.00).
+            When the page goes dynamic, both should come from one source.
+          -->
+          <form class="mt-7 space-y-5" action="#" method="post">
+            <div>
+              <label for="order-name" class="block text-sm font-semibold mb-2">Full name</label>
+              <input id="order-name" name="name" type="text" required
+                     placeholder="Your name"
+                     class="w-full rounded-2xl border border-ink/20 bg-white px-5 py-3.5 text-sm focus:outline-none focus:border-ember">
+            </div>
+            <div>
+              <label for="order-address" class="block text-sm font-semibold mb-2">Delivery address</label>
+              <input id="order-address" name="address" type="text" required
+                     placeholder="Street address"
+                     class="w-full rounded-2xl border border-ink/20 bg-white px-5 py-3.5 text-sm focus:outline-none focus:border-ember">
+            </div>
+            <div>
+              <label for="order-phone" class="block text-sm font-semibold mb-2">Phone number</label>
+              <input id="order-phone" name="phone" type="tel" required
+                     pattern="[0-9+\-\s()]{7,}"
+                     title="Digits, spaces and ()+- only, at least 7 characters"
+                     placeholder="(555) 123-4567"
+                     class="w-full rounded-2xl border border-ink/20 bg-white px-5 py-3.5 text-sm focus:outline-none focus:border-ember">
+            </div>
+            <button type="submit"
+                    class="w-full rounded-full bg-ember text-white font-semibold px-8 py-3.5 shadow-soft hover:bg-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2">
+              Order now — $14.00
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature cards -->
+    <section class="pb-20 sm:pb-28">
+      <div class="max-w-5xl mx-auto px-5 sm:px-8">
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-center">Why one dish?</h2>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="rounded-2xl bg-white border border-ink/5 shadow-soft p-7 hover:-translate-y-1 transition-transform">
+            <div class="text-3xl mb-4">🍳</div>
+            <h3 class="font-display font-semibold text-xl">One dish, decided daily</h3>
+            <p class="mt-2 text-sm text-stone leading-relaxed">Our chefs choose the dish each morning. They cook what's freshest and best today.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-ink/5 shadow-soft p-7 hover:-translate-y-1 transition-transform">
+            <div class="text-3xl mb-4">🧠</div>
+            <h3 class="font-display font-semibold text-xl">Zero decision fatigue</h3>
+            <p class="mt-2 text-sm text-stone leading-relaxed">No scrolling 200 options. No "what do you feel like?" You already know the answer.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-ink/5 shadow-soft p-7 hover:-translate-y-1 transition-transform">
+            <div class="text-3xl mb-4">🥘</div>
+            <h3 class="font-display font-semibold text-xl">Made in small batches</h3>
+            <p class="mt-2 text-sm text-stone leading-relaxed">We only make what we'll sell. Fresher food, less waste, and care in every pot.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="pb-20 sm:pb-28">
+      <div class="max-w-5xl mx-auto px-5 sm:px-8">
+        <div class="rounded-3xl bg-ink text-cream px-8 sm:px-14 py-12 sm:py-16">
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-center">How it works</h2>
+          <ol class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <li class="p-6">
+              <div class="dish-counter-num font-display text-4xl font-semibold text-saffron mb-3">1</div>
+              <h3 class="font-display font-semibold text-lg">We pick the dish</h3>
+              <p class="mt-1 text-sm text-cream/60">Every morning, our kitchen decides. That's it.</p>
+            </li>
+            <li class="p-6">
+              <div class="dish-counter-num font-display text-4xl font-semibold text-saffron mb-3">2</div>
+              <h3 class="font-display font-semibold text-lg">You order before cutoff</h3>
+              <p class="mt-1 text-sm text-cream/60">Order by 4pm. When it's gone, it's gone.</p>
+            </li>
+            <li class="p-6">
+              <div class="dish-counter-num font-display text-4xl font-semibold text-saffron mb-3">3</div>
+              <h3 class="font-display font-semibold text-lg">Delivered hot</h3>
+              <p class="mt-1 text-sm text-cream/60">At your door by dinner time. Still steaming.</p>
+            </li>
+          </ol>
+          <p class="mt-8 text-center text-xs text-cream/60 uppercase tracking-[0.25em]">
+            The kitchen, every single morning
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="pb-20 sm:pb-28">
+      <div class="max-w-2xl mx-auto px-5 sm:px-8">
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-center">FAQ</h2>
+        <div class="mt-10 space-y-4">
+          <details class="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft open:border-ember/40">
+            <summary class="font-display font-semibold cursor-pointer">What if I don't like today's dish?</summary>
+            <p class="text-stone text-sm mt-3 leading-relaxed">Then tomorrow is a new surprise. That's the deal.</p>
+          </details>
+          <details class="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft open:border-ember/40">
+            <summary class="font-display font-semibold cursor-pointer">Can I order tomorrow's dish today?</summary>
+            <p class="text-stone text-sm mt-3 leading-relaxed">No. We announce it at 9am tomorrow. Sign up below and you'll know first.</p>
+          </details>
+          <details class="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft open:border-ember/40">
+            <summary class="font-display font-semibold cursor-pointer">What if it sells out?</summary>
+            <p class="text-stone text-sm mt-3 leading-relaxed">Then we're done for the day. Small batches sell fast — order early.</p>
+          </details>
+          <details class="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft open:border-ember/40">
+            <summary class="font-display font-semibold cursor-pointer">Can I customize my dish?</summary>
+            <p class="text-stone text-sm mt-3 leading-relaxed">No substitutions. The chef knows best — trust the process.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Email signup -->
+    <section id="signup" class="pb-20 sm:pb-28 text-center">
+      <div class="max-w-xl mx-auto px-5 sm:px-8">
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl">
+          Tomorrow's dish: <span class="italic text-ember">unknown</span>
+        </h2>
+        <p class="mt-3 text-stone">Get one email a day. The dish, the price, the link. That's all.</p>
+        <form class="mt-7 flex flex-col sm:flex-row gap-3" action="#" method="post">
+          <label class="sr-only" for="email">Email address</label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com"
+                 class="flex-1 rounded-full border border-ink/20 bg-white px-5 py-3.5 text-sm focus:outline-none focus:border-ember">
+          <button type="submit" class="rounded-full bg-ember text-white font-semibold px-8 py-3.5 hover:bg-ink transition-colors">
+            Sign me up
+          </button>
+        </form>
+        <p class="dish-counter-num mt-8 font-display text-sm text-stone">
+          No. 042 served today &middot; No. 043 tomorrow
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-ink/10">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-stone">
+      <p class="font-display font-semibold text-ink">One Dish<span class="text-ember">.</span></p>
+      <p>&copy; 2026 One Dish. One dish a day. That's the whole business.</p>
+      <p class="dish-counter-num">Daily dish No. 042</p>
+    </div>
+  </footer>
+
+</body>
+</html>
