@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DailyMeal;
+use App\Models\Extra;
 use App\Models\Setting;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Arr;
@@ -43,7 +44,7 @@ class OrderValidationService
      * ]
      *
      * @param  array{items?: array<int, array{item_type?: mixed, extra_id?: mixed, quantity?: mixed}>, fulfilment_type?: mixed, delivery_address?: mixed}  $payload
-     * @return Collection<int, array{type: string, meal: ?DailyMeal, extra: ?object, quantity: int, unit_price: string, name: string}>
+     * @return Collection<int, array{type: string, meal: ?DailyMeal, extra: ?Extra, quantity: int, unit_price: string, name: string}>
      *
      * @throws ValidationException
      */
@@ -130,7 +131,7 @@ class OrderValidationService
      * Resolve each line against today's meal and its extras.
      *
      * @param  Collection<int, array{item_type: string, extra_id: ?int, quantity: int}>  $items
-     * @return Collection<int, array{type: string, meal: ?DailyMeal, extra: ?object, quantity: int, unit_price: string, name: string}>
+     * @return Collection<int, array{type: string, meal: ?DailyMeal, extra: ?Extra, quantity: int, unit_price: string, name: string}>
      */
     private function validateItems(Collection $items, ?DailyMeal $todayMeal): Collection
     {
@@ -144,6 +145,7 @@ class OrderValidationService
 
         return $items->map(function (array $item, int $index) use ($todayMeal, $extras) {
             if ($item['item_type'] === 'meal') {
+                /** @var array{type: string, meal: ?DailyMeal, extra: ?Extra, quantity: int, unit_price: string, name: string} */
                 return [
                     'type' => 'meal',
                     'meal' => $todayMeal,
@@ -176,7 +178,7 @@ class OrderValidationService
     /**
      * T2.2: at most `max_per_order` meal units; extras uncapped.
      *
-     * @param  Collection<int, array{type: string, meal: ?DailyMeal, extra: ?object, quantity: int, unit_price: string, name: string}>  $lines
+     * @param  Collection<int, array{type: string, meal: ?DailyMeal, extra: ?Extra, quantity: int, unit_price: string, name: string}>  $lines
      */
     private function validateMealCap(Collection $lines, ?DailyMeal $todayMeal): void
     {
@@ -184,7 +186,7 @@ class OrderValidationService
             ->filter(fn (array $line) => $line['type'] === 'meal')
             ->sum(fn (array $line) => $line['quantity']);
 
-        $max = $todayMeal?->max_per_order ?? 5;
+        $max = $todayMeal->max_per_order ?? 5;
 
         if ($mealQty > $max) {
             throw ValidationException::withMessages([

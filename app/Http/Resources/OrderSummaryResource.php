@@ -23,6 +23,7 @@ class OrderSummaryResource extends JsonResource
             'payment_method' => $this->payment_method,
             'order_total' => $this->order_total,
             'ordered_at' => $this->ordered_at?->toIso8601String(),
+
             'items' => $this->items->map(fn ($item) => [
                 'item_type' => $item->item_type,
                 'name' => $item->name,
